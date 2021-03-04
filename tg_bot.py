@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import telegram
 import logging
 import os
 
@@ -12,15 +13,27 @@ logger = logging.getLogger(__name__)
 
 
 def start(bot, update):
-    update.message.reply_text('Hi!')
+    update.message.reply_text('Hi! I am a quiz-bot!')
 
 
 def help(bot, update):
     update.message.reply_text('Help!')
 
 
-def echo(bot, update):
-    update.message.reply_text(update.message.text)
+def answer(bot, update):
+    custom_keyboard = [['New question', 'Сapitulation'],
+                       ['My score']]
+    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
+    if update.message.text == 'New question':
+        bot.send_message(
+            chat_id=update.message.chat_id,
+            text="А вот и вопросик: столица Аргентины?",
+            reply_markup=reply_markup)
+    else:
+        bot.send_message(
+            chat_id=update.message.chat_id,
+            text="You are the best!",
+            reply_markup=reply_markup)
 
 
 def error(bot, update, error):
@@ -35,7 +48,7 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(MessageHandler(Filters.text, echo))
+    dp.add_handler(MessageHandler(Filters.text, answer))
 
     dp.add_error_handler(error)
     updater.start_polling()
