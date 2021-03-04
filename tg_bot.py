@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from main import get_quiz
 import telegram
+import redis
 import logging
 import os
 import random
@@ -13,9 +14,19 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+quiz = get_quiz()
+question = random.choice(list(quiz.keys()))
+
 
 def start(bot, update):
-    update.message.reply_text('Hi! I am a quiz-bot!')
+    db_host = os.getenv("REDIS_DB")
+    db_password = os.getenv("REDIS_DB_PASSWORD")
+    db = redis.Redis(
+        host=db_host, port=10513,
+        db=0, password=db_password, decode_responses=True)
+    db.set(update.message.chat_id, question)
+    update.message.reply_text(
+        'Hi! I am a quiz-bot! Click on New question to start a quiz!')
 
 
 def help(bot, update):
@@ -26,11 +37,10 @@ def answer(bot, update):
     custom_keyboard = [['New question', 'Сapitulation'],
                        ['My score']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    quiz = get_quiz()
     if update.message.text == 'New question':
         bot.send_message(
             chat_id=update.message.chat_id,
-            text=random.choice(list(quiz.keys())),
+            text=question,
             reply_markup=reply_markup)
     else:
         bot.send_message(
