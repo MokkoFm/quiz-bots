@@ -8,7 +8,8 @@ def get_quiz():
     answers = []
     for paragraph in paragraphs:
         try:
-            question = paragraph.split('Вопрос')[0].split('Ответ')[0].split(':\n')[1]
+            question = paragraph.split(
+                'Вопрос')[0].split('Ответ')[0].split(':\n')[1]
             questions.append(question)
             answer = paragraph.split('Ответ')[1].split(':')[1].split('\n')[1]
             answers.append(answer)
