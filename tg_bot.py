@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from main import get_quiz
 import telegram
 import logging
 import os
+import random
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,10 +26,11 @@ def answer(bot, update):
     custom_keyboard = [['New question', 'Сapitulation'],
                        ['My score']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
+    quiz = get_quiz()
     if update.message.text == 'New question':
         bot.send_message(
             chat_id=update.message.chat_id,
-            text="А вот и вопросик: столица Аргентины?",
+            text=random.choice(list(quiz.keys())),
             reply_markup=reply_markup)
     else:
         bot.send_message(
