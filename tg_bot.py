@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 quiz = get_quiz()
 question = random.choice(list(quiz.keys()))
+print(quiz[question].split('.')[0])
 
 
 def start(bot, update):
@@ -42,10 +43,15 @@ def answer(bot, update):
             chat_id=update.message.chat_id,
             text=question,
             reply_markup=reply_markup)
+    elif update.message.text == quiz[question].split('.')[0] or update.message.text == quiz[question].split('(')[0]:
+        bot.send_message(
+            chat_id=update.message.chat_id,
+            text='Perfect! Please, push New question for the next challange.',
+            reply_markup=reply_markup)
     else:
         bot.send_message(
             chat_id=update.message.chat_id,
-            text="You are the best!",
+            text="Unfortunately, no... Try again!",
             reply_markup=reply_markup)
 
 

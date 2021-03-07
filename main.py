@@ -17,6 +17,7 @@ def get_quiz():
             continue
 
     quiz = dict(zip(questions, answers))
+    print(quiz)
     return quiz
 
 
