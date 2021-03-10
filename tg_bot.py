@@ -23,9 +23,12 @@ db = connect_to_db()
 
 
 def start(bot, update):
+    user = update.message.chat_id
     update.message.reply_text(
         'Hi! I am a quiz-bot! Click on New question to start a quiz!',
         reply_markup=reply_markup)
+    if not db.get('score-' + str(user)):
+        db.set('score-' + str(user), 0)
     return NEW_QUESTION
 
 
@@ -41,12 +44,16 @@ def new_question(bot, update):
 
 def answer(bot, update):
     answer = update.message.text
-    question = db.get(update.message.chat_id)
+    user = update.message.chat_id
+    question = db.get(user)
+    user_score = 'score-' + str(user)
+    score = db.get(user_score)
     if answer == quiz[question].split('.')[0] or answer == quiz[question].split('(')[0]:
         update.message.reply_text(
             text='Congrats! Push New question if you want one more!',
             reply_markup=reply_markup
         )
+        db.set(user_score, ++ 1)
         return NEW_QUESTION
     elif answer == 'Сapitulation':
         update.message.reply_text(
@@ -54,6 +61,12 @@ def answer(bot, update):
             reply_markup=reply_markup,
         )
         return NEW_QUESTION
+    elif answer == 'My score':
+        update.message.reply_text(
+            text=score,
+            reply_markup=reply_markup,
+        )
+        return ANSWER
     else:
         update.message.reply_text(
             text='Unfortunately, no... Try again!',
