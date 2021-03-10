@@ -1,12 +1,11 @@
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 from main import get_quiz
+from connect_to_db import connect_to_db
 import telegram
-import redis
 import logging
 import os
 import random
-load_dotenv()
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -16,16 +15,11 @@ logger = logging.getLogger(__name__)
 
 NEW_QUESTION, ANSWER = range(2)
 
-
 custom_keyboard = [['New question', 'Сapitulation'],
                    ['My score']]
 reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
 quiz = get_quiz()
-db_host = os.getenv("REDIS_DB")
-db_password = os.getenv("REDIS_DB_PASSWORD")
-db = redis.Redis(
-    host=db_host, port=10513,
-    db=0, password=db_password, decode_responses=True)
+db = connect_to_db()
 
 
 def start(bot, update):
@@ -60,7 +54,7 @@ def answer(bot, update):
             reply_markup=reply_markup,
         )
         return NEW_QUESTION
-    else: 
+    else:
         update.message.reply_text(
             text='Unfortunately, no... Try again!',
             reply_markup=reply_markup
@@ -84,6 +78,7 @@ def error(bot, update, error):
 
 
 def main():
+    load_dotenv()
     tg_token = os.getenv("TG_BOT_TOKEN")
 
     updater = Updater(tg_token)
