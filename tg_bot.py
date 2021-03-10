@@ -42,8 +42,30 @@ def new_question(bot, update):
         text=question,
         reply_markup=reply_markup,
     )
-
     return ANSWER
+
+
+def answer(bot, update):
+    answer = update.message.text
+    question = db.get(update.message.chat_id)
+    if answer == quiz[question].split('.')[0] or answer == quiz[question].split('(')[0]:
+        update.message.reply_text(
+            text='Congrats! Push New question if you want one more!',
+            reply_markup=reply_markup
+        )
+        return NEW_QUESTION
+    elif answer == 'Сapitulation':
+        update.message.reply_text(
+            text=quiz[question],
+            reply_markup=reply_markup,
+        )
+        return NEW_QUESTION
+    else: 
+        update.message.reply_text(
+            text='Unfortunately, no... Try again!',
+            reply_markup=reply_markup
+        )
+        return ANSWER
 
 
 def help(bot, update):
@@ -57,23 +79,6 @@ def cancel(update, context):
     return ConversationHandler.END
 
 
-def answer(bot, update):
-    message = update.message.text
-    question = db.get(update.message.chat_id)
-    if message == quiz[question].split('.')[0] or message == quiz[question].split('(')[0]:
-        update.message.reply_text(
-            text='Congrats! Push New question if you want one more!',
-            reply_markup=reply_markup
-        )
-        return NEW_QUESTION
-    else: 
-        update.message.reply_text(
-            text='Unfortunately, no... Try again!',
-            reply_markup=reply_markup
-        )
-        return ANSWER
-
-
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
@@ -83,15 +88,11 @@ def main():
 
     updater = Updater(tg_token)
     dp = updater.dispatcher
-    # dp.add_handler(CommandHandler("start", start))
-    # dp.add_handler(CommandHandler("help", help))
-    # dp.add_handler(MessageHandler(Filters.text, answer))
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
 
         states={
             NEW_QUESTION: [MessageHandler(Filters.regex('^New question$'), new_question)],
-
             ANSWER: [MessageHandler(Filters.text, answer)],
         },
 
