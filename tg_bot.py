@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-from main import get_quiz
+from get_quiz import get_quiz
 from connect_to_db import connect_to_db
 import telegram
 import logging
