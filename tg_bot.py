@@ -48,12 +48,13 @@ def answer(bot, update):
     question = db.get(user)
     user_score = 'score-' + str(user)
     score = db.get(user_score)
+    updated_score = score + 1
     if answer == quiz[question].split('.')[0] or answer == quiz[question].split('(')[0]:
         update.message.reply_text(
             text='Congrats! Push New question if you want one more!',
             reply_markup=reply_markup
         )
-        db.set(user_score, ++ 1)
+        db.set(user_score, updated_score)
         return NEW_QUESTION
     elif answer == 'Сapitulation':
         update.message.reply_text(
