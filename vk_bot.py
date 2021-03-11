@@ -92,6 +92,13 @@ def main():
                 get_score(event, vk_api, keyboard, db)
             elif event.text == quiz[db.get(f'vk-{event.user_id}')].split('.')[0] or event.text == quiz[db.get(f'vk-{event.user_id}')].split('(')[0]:
                 congratulate(event, vk_api, keyboard, db)
+            else:
+                vk_api.messages.send(
+                    user_id=event.user_id,
+                    message="К сожалению, нет... Попробуйте ещё!",
+                    random_id=get_random_id(),
+                    keyboard=keyboard.get_keyboard(),
+                )
 
 
 if __name__ == "__main__":
