@@ -1,5 +1,5 @@
 def get_quiz():
-    filename = 'quiz-questions/1vs1200.txt'
+    filename = 'quiz_example.txt'
     with open(filename, 'r', encoding='KOI8-R') as file:
         questions = file.read()
 
