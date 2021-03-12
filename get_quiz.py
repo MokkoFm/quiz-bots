@@ -1,3 +1,6 @@
+import json
+
+
 def get_quiz():
     filename = 'quiz_example.txt'
     with open(filename, 'r', encoding='KOI8-R') as file:
@@ -17,6 +20,9 @@ def get_quiz():
             continue
 
     quiz = dict(zip(questions, answers))
+    quiz_json = json.dumps(quiz)
+    with open('quiz.json', 'w') as file:
+        file.write(quiz_json)
     print(quiz)
     return quiz
 

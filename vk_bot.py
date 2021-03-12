@@ -74,7 +74,10 @@ def congratulate(event, vk_api, keyboard, db):
 
 def main():
     load_dotenv()
-    quiz = get_quiz()
+    # quiz_json = get_quiz()
+    json_file = os.getenv("QUIZ_PATH")
+    with open(json_file, "r") as my_file:
+        quiz = my_file.read()
     db = connect_to_db()
     vk_token = os.getenv("VK_TOKEN")
     vk_session = vk.VkApi(token=vk_token)
