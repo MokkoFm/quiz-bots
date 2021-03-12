@@ -48,8 +48,8 @@ def answer(bot, update):
     question = db.get(user)
     user_score = 'score-' + str(user)
     score = db.get(user_score)
-    updated_score = score + 1
     if answer == quiz[question].split('.')[0] or answer == quiz[question].split('(')[0]:
+        updated_score = int(score) + 1
         update.message.reply_text(
             text='Congrats! Push New question if you want one more!',
             reply_markup=reply_markup
