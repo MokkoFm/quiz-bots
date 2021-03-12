@@ -20,15 +20,14 @@ def get_quiz():
             continue
 
     quiz = dict(zip(questions, answers))
-    quiz_json = json.dumps(quiz)
-    with open('quiz.json', 'w') as file:
-        file.write(quiz_json)
-    print(quiz)
     return quiz
 
 
 def main():
-    get_quiz()
+    quiz = get_quiz()
+    quiz_json = json.dumps(quiz)
+    with open('quiz.json', 'w') as file:
+        file.write(quiz_json)
 
 
 if __name__ == "__main__":

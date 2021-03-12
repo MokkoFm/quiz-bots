@@ -5,7 +5,6 @@ import vk_api as vk
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
-from get_quiz import get_quiz
 from connect_to_db import connect_to_db
 
 
@@ -74,9 +73,8 @@ def congratulate(event, vk_api, keyboard, db):
 
 def main():
     load_dotenv()
-    # quiz_json = get_quiz()
-    json_file = os.getenv("QUIZ_PATH")
-    with open(json_file, "r") as my_file:
+    quiz_json = os.getenv("QUIZ_PATH")
+    with open(quiz_json, "r") as my_file:
         quiz = my_file.read()
     db = connect_to_db()
     vk_token = os.getenv("VK_TOKEN")

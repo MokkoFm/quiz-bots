@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-from get_quiz import get_quiz
 from connect_to_db import connect_to_db
 import telegram
 import logging
@@ -18,7 +17,9 @@ NEW_QUESTION, ANSWER = range(2)
 custom_keyboard = [['New question', 'Сapitulation'],
                    ['My score']]
 reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-quiz = get_quiz()
+quiz_json = os.getenv("QUIZ_PATH")
+with open(quiz_json, "r") as my_file:
+    quiz = my_file.read()
 db = connect_to_db()
 
 
