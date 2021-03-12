@@ -5,16 +5,8 @@ import vk_api as vk
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
+from get_quiz import get_quiz
 from connect_to_db import connect_to_db
-
-
-def answer(event, vk_api, keyboard):
-    vk_api.messages.send(
-        user_id=event.user_id,
-        message='Пример клавиатуры',
-        random_id=get_random_id(),
-        keyboard=keyboard.get_keyboard(),
-    )
 
 
 def create_keyboard():
@@ -73,9 +65,7 @@ def congratulate(event, vk_api, keyboard, db):
 
 def main():
     load_dotenv()
-    quiz_json = os.getenv("QUIZ_PATH")
-    with open(quiz_json, "r") as my_file:
-        quiz = my_file.read()
+    quiz = get_quiz()
     db = connect_to_db()
     vk_token = os.getenv("VK_TOKEN")
     vk_session = vk.VkApi(token=vk_token)
