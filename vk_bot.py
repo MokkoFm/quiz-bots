@@ -1,12 +1,15 @@
 import os
 import random
-from dotenv import load_dotenv
+import logging
 import vk_api as vk
+from dotenv import load_dotenv
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
 from get_quiz import get_quiz
 from connect_to_db import connect_to_db
+from logs_handler import TelegramLogsHandler
+from telegram import Bot
 
 
 def create_keyboard():
@@ -68,6 +71,14 @@ def main():
     quiz = get_quiz()
     db = connect_to_db()
     vk_token = os.getenv("VK_TOKEN")
+    tg_user_id = os.getenv("TG_USER_ID")
+    tg_token = os.getenv("TG_BOT_TOKEN")
+    tg_bot = Bot(tg_token)
+
+    logger = logging.getLogger('chatbots-logger')
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(tg_bot, tg_user_id))
+
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
