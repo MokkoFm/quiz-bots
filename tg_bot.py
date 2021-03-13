@@ -23,8 +23,8 @@ def start(bot, update):
     update.message.reply_text(
         'Hi! I am a quiz-bot! Click on New question to start a quiz!',
         reply_markup=reply_markup)
-    if not db.get('score-' + str(user)):
-        db.set('score-' + str(user), 0)
+    if not db.get('tg_score-' + str(user)):
+        db.set('tg_score-' + str(user), 0)
     return NEW_QUESTION
 
 
@@ -42,7 +42,7 @@ def answer(bot, update):
     answer = update.message.text
     user = update.message.chat_id
     question = db.get(user)
-    user_score = 'score-' + str(user)
+    user_score = 'tg_score-' + str(user)
     score = db.get(user_score)
     if answer == quiz[question].split('.')[0] or answer == quiz[question].split('(')[0]:
         updated_score = int(score) + 1
