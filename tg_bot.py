@@ -1,20 +1,16 @@
-from dotenv import load_dotenv
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-from get_quiz import get_quiz
-from connect_to_db import connect_to_db
 import telegram
 import logging
 import os
 import random
+from dotenv import load_dotenv
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+from telegram import Bot
+from logs_handler import TelegramLogsHandler
+from get_quiz import get_quiz
+from connect_to_db import connect_to_db
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO)
-
-logger = logging.getLogger(__name__)
-
+logger = logging.getLogger('chatbots-logger')
 NEW_QUESTION, ANSWER = range(2)
-
 custom_keyboard = [['New question', 'Сapitulation'],
                    ['My score']]
 reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
@@ -94,6 +90,11 @@ def error(bot, update, error):
 def main():
     load_dotenv()
     tg_token = os.getenv("TG_BOT_TOKEN")
+    tg_user_id = os.getenv("TG_USER_ID")
+    tg_bot = Bot(tg_token)
+    logger = logging.getLogger('chatbots-logger')
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(tg_bot, tg_user_id))
 
     updater = Updater(tg_token)
     dp = updater.dispatcher

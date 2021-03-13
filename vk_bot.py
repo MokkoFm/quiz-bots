@@ -12,6 +12,9 @@ from logs_handler import TelegramLogsHandler
 from telegram import Bot
 
 
+logger = logging.getLogger('chatbots-logger')
+
+
 def create_keyboard():
     keyboard = VkKeyboard(one_time=True)
     keyboard.add_button('Новый вопрос', color=VkKeyboardColor.POSITIVE)
